@@ -1,1 +1,14 @@
 {% extends 'base.html.twig' %}
+
+{% block body %}
+
+	<h2>Dernières nouvelles</h2>
+
+	{% for story in stories %}
+		<article>
+			<h3><a href="{{ path("story_details", {"id":story.id}) }}">{{ story.title }}</a></h3>
+			<p>{{ story.dateCreated|date("d-m-Y H:i:s") }}</p>
+		</article>
+	{% endfor %}
+
+{% endblock %}

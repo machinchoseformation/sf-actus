@@ -29,6 +29,13 @@
                 {% block header %}{% endblock %}
             </header>
             <section>
+        
+                {% for flashMessage in app.session.flashbag.get('notice') %}
+                    <div class="alert alert-info">
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+
                 {% block body %}{% endblock %}
             </section>
             <footer>
