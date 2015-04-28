@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}SF Actus{% endblock %}</title>
+        {% block stylesheets %}
+
+        {# boostrap #}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+        <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
+        {% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>Actus</h1>
+                
+                <nav>
+                    <ul class="nav nav-pills">
+                        <li><a href="{{ path('home') }}" title="SF Actus | Accueil">Accueil</a></li>
+                        <li><a href="{{ path('contact') }}" title="Contactez-nous">Contact</a></li>
+                        <li><a href="{{ path('about') }}" title="À propos de nous">À propos</a></li>
+                    </ul>
+                </nav>
+
+
+                {% block header %}{% endblock %}
+            </header>
+            <section>
+                {% block body %}{% endblock %}
+            </section>
+            <footer>
+                @copyright machin
+                {% block footer %}{% endblock %}
+            </footer>
+        </div>
+
+        {% block javascripts %}
+        
+        {# chargé en cdn donc url en dur #}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script> 
+
+        {# lien vers le js local avec la fonction asset() #}
+        <script src="{{ asset('js/app.js') }}"></script>
+        
+        {% endblock %}
+    </body>
+</html>

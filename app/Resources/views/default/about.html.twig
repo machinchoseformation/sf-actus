@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+À propos | {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<h1>À propos !</h1>
+
+{# debug à partir de twig #}
+{% dump(days) %}
+
+{# boucle for in en twig #}
+{% for day in days %}
+	{{ day }}
+{% endfor %}
+<br />
+{{ myDate }}<br />
+{{ randomNum }}
+
+{% endblock %}
