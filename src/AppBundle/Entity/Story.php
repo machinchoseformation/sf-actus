@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Story
@@ -24,6 +25,13 @@ class Story
     /**
      * @var string
      *
+     * @Assert\NotBlank(message="Veuillez renseigner un titre")
+     * @Assert\Length(
+     *      min = "3",
+     *      max = "255",
+     *      minMessage = "Votre titre doit faire au moins {{ limit }} caractères",
+     *      maxMessage = "Votre titre ne peut pas être plus long que {{ limit }} caractères"
+     * )
      * @ORM\Column(name="title", type="string", length=255)
      */
     private $title;
@@ -38,6 +46,7 @@ class Story
     /**
      * @var string
      *
+     * @Assert\NotBlank(message="Veuillez renseigner un contenu")
      * @ORM\Column(name="content", type="text")
      */
     private $content;

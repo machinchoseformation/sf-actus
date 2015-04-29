@@ -6,17 +6,25 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use AppBundle\Entity\Story;
+use AppBundle\Form\StoryType;
 
+/**
+* @Route("/article")
+*/
 class StoryController extends Controller
 {
 
 	/**
-	* @Route("/article/details/{id}", requirements={"id":"\d+"}, name="story_details")
+	* @Route(
+	* 	"/details/{slug}", 
+	* 	requirements={"slug":"[a-z0-9-]+"}, 
+	* 	name="story_details"
+	* )	
 	*/ 
-	public function storyDetailsAction( $id )
+	public function storyDetailsAction( $slug )
 	{
 		$storyRepo = $this->get("doctrine")->getRepository("AppBundle:Story");
-		$story = $storyRepo->find( $id );
+		$story = $storyRepo->findOneBySlug( $slug );
 
 		if (!$story){
 			throw $this->createNotFoundException("Oupsie !");
@@ -31,46 +39,59 @@ class StoryController extends Controller
 
 
 	/**
-	 * @Route("/article/creation", name="create_story")
+	 * @Route("/creation", name="create_story")
 	 */
-	public function createStoryAction()
+	public function createStoryAction(
+		\Symfony\Component\HttpFoundation\Request $request)
 	{
 
-		//récupère le gestionnaire d'entité
-		//qui permet de faire des create, update ou delete
-		$em = $this->get("doctrine")->getManager();
+		//créer une entité vide à associer au formulaire
+		$story = new Story();
 
-		for($i=0;$i<50;$i++){
+		//créer une instance du formulaire
+		$createStoryForm = $this->createForm(new StoryType(), $story); 
 
-			//crée une instance
-			$newStory = new Story();
+		//récupérer les infos depuis la requête
+		//pour hydrater notre entité vide
+		$createStoryForm->handleRequest( $request );
 
-			//hydrate l'instance
-			$newStory->setTitle( "Un titre éêàö ! pouf pif ? bla $i" );
+		//si le formulaire est valide (sous-entendu s'il est soumis)
+		if ( $createStoryForm->isValid() ){
 
-			//crée un slug à partir du titre
-			$slug = $this->get('cocur_slugify')->slugify( $newStory->getTitle() );
-			$newStory->setSlug( $slug );
+			//on hydrate les champs manquants
+			$story->setDateCreated( new \DateTime() );
+			$story->setDateModified( $story->getDateCreated() );
 
-			$newStory->setContent( mt_rand(1000,9999) . " lorem ipsum dolor sit amet..." );
-			$newStory->setDateCreated( new \DateTime() );
-			$newStory->setDateModified( new \DateTime() );
-			$newStory->setDatePublished( null );
-			$newStory->setIsPublished( false );
+			$slug = $this->get("cocur_slugify")->slugify( $story->getTitle() );
+			$story->setSlug( $slug );
 
-			//sauvegarde l'instance en bdd
-			$em->persist( $newStory );
+			//si l'article est publié, donner une date de publication
+			if ($story->getIsPublished()){
+				$story->setDatePublished( new \DateTime() );
+			}
+
+			//on sauvegarde
+			$em = $this->get("doctrine")->getManager();
+			$em->persist($story);
+			$em->flush();
+
+			//redirection
+			return $this->redirectToRoute("story_details", 
+				array("slug" => $story->getSlug())
+			);
 		}
-		
-		$em->flush();
 
-		return $this->render('story/create_story.html.twig');
+		//on passe le formulaire à la vue
+		$params = array(
+			"createStoryForm" => $createStoryForm->createView()
+		);
+
+		return $this->render('story/create_story.html.twig', $params);
 	}
 
 
 	/**
-	* @Route("/article/effacer/{id}", requirements={"id":"\d+"}, 
-	* name="story_delete")
+	* @Route("/effacer/{id}", requirements={"id":"\d+"}, name="story_delete")
 	*/ 	
 	public function deleteStoryAction( $id )
 	{
