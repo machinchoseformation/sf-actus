@@ -4,9 +4,12 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 use AppBundle\Entity\Story;
 use AppBundle\Form\StoryType;
+use AppBundle\Entity\Comment;
+use AppBundle\Form\CommentType;
 
 /**
 * @Route("/article")
@@ -21,7 +24,7 @@ class StoryController extends Controller
 	* 	name="story_details"
 	* )	
 	*/ 
-	public function storyDetailsAction( $slug )
+	public function storyDetailsAction(Request $request, $slug )
 	{
 		$storyRepo = $this->get("doctrine")->getRepository("AppBundle:Story");
 		$story = $storyRepo->findOneBySlug( $slug );
@@ -30,8 +33,24 @@ class StoryController extends Controller
 			throw $this->createNotFoundException("Oupsie !");
 		}
 
+		$comment = new Comment();
+		$commentForm = $this->createForm(new CommentType, $comment);
+
+		$commentForm->handleRequest($request);
+		if ($commentForm->isValid()){
+			$comment->setDateCreated(new \DateTime());
+			$comment->setDateModified(new \DateTime());
+
+			$comment->setStory($story);
+
+			$em = $this->get("doctrine")->getManager();
+			$em->persist($comment);
+			$em->flush();
+		}
+
 		$params = array(
-			"story" => $story
+			"story" => $story,
+			"commentForm" => $commentForm->createView()
 		);
 		return $this->render("story/story_details.html.twig", $params);
 	}
