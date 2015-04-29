@@ -33,6 +33,7 @@ class StoryController extends Controller
 			throw $this->createNotFoundException("Oupsie !");
 		}
 
+		//traitement du formulaire de commentaire
 		$comment = new Comment();
 		$commentForm = $this->createForm(new CommentType, $comment);
 
@@ -48,8 +49,15 @@ class StoryController extends Controller
 			$em->flush();
 		}
 
+
+		//récupère les commentaires associés à l'article actuel
+		$commentsRepo = $this->get("doctrine")->getRepository("AppBundle:Comment");
+		$comments = $commentsRepo->findByStory($story);
+
+
 		$params = array(
 			"story" => $story,
+			"comments" => $comments,
 			"commentForm" => $commentForm->createView()
 		);
 		return $this->render("story/story_details.html.twig", $params);

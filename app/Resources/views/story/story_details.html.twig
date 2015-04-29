@@ -15,4 +15,7 @@
 
 	{{ form(commentForm) }}
 
+	{% for comment in comments %}
+		<p>{{ comment.content }}</p>
+	{% endfor %}
 {% endblock %}
