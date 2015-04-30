@@ -79,6 +79,12 @@ class Story
      */
     private $isPublished;
 
+    /**
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Comment", mappedBy="story")
+    */
+    private $comments;
+
+
 
     /**
      * Get id

@@ -50,15 +50,15 @@ class StoryController extends Controller
 		}
 
 		//récupère les commentaires associés à l'article actuel
-		$commentsRepo = $this->get("doctrine")->getRepository("AppBundle:Comment");
-		$comments = $commentsRepo->findByStory($story);
-		$comments = $commentsRepo->findBy(
-			array("story" => $story)
-		);
+		//$commentsRepo = $this->get("doctrine")->getRepository("AppBundle:Comment");
+		//$comments = $commentsRepo->findByStory($story);
+		//$comments = $commentsRepo->findBy(
+		//	array("story" => $story)
+		//);
 
 		$params = array(
 			"story" => $story,
-			"comments" => $comments,
+	//		"comments" => $comments,
 			"commentForm" => $commentForm->createView()
 		);
 		return $this->render("story/story_details.html.twig", $params);

@@ -57,7 +57,8 @@ class Comment
     private $dateModified;
 
     /**
-    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Story")
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Story", inversedBy="comments")
+    * @ORM\JoinColumn(nullable=false)
     */
     private $story;
 
@@ -185,5 +186,28 @@ class Comment
     public function getDateModified()
     {
         return $this->dateModified;
+    }
+
+    /**
+     * Set story
+     *
+     * @param \AppBundle\Entity\Story $story
+     * @return Comment
+     */
+    public function setStory(\AppBundle\Entity\Story $story = null)
+    {
+        $this->story = $story;
+
+        return $this;
+    }
+
+    /**
+     * Get story
+     *
+     * @return \AppBundle\Entity\Story 
+     */
+    public function getStory()
+    {
+        return $this->story;
     }
 }

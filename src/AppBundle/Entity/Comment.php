@@ -57,7 +57,8 @@ class Comment
     private $dateModified;
 
     /**
-    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Story")
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Story", inversedBy="comments")
+    * @ORM\JoinColumn(nullable=false)
     */
     private $story;
 
