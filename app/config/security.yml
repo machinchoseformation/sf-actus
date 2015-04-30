@@ -8,7 +8,7 @@ security:
                 check_path: login_check
             logout:
                 path:   logout
-                target: index
+                target: home
 
     providers:
         main:
