@@ -7,6 +7,9 @@
 	<article>
 		<h3>{{ story.title }}</h3>
 		<p>{{ story.dateCreated|date("d-m-Y H:i:s") }}</p>
+		<div>
+			{{story.content}}
+		</div>
 
 		<a class="btn btn-danger" href="{{ path("story_delete", {"id":story.id}) }}">
 			<span class="glyphicon glyphicon-remove"></span> Effacer cet article</a>
@@ -15,7 +18,9 @@
 
 	{{ form(commentForm) }}
 
-	{% for comment in comments %}
-		<p>{{ comment.content }}</p>
-	{% endfor %}
+	<div class="comments">
+		{% for comment in comments %}
+			<p>{{ comment.content }}</p>
+		{% endfor %}
+	</div>
 {% endblock %}

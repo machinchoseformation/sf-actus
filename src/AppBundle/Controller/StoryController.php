@@ -49,11 +49,12 @@ class StoryController extends Controller
 			$em->flush();
 		}
 
-
 		//récupère les commentaires associés à l'article actuel
 		$commentsRepo = $this->get("doctrine")->getRepository("AppBundle:Comment");
 		$comments = $commentsRepo->findByStory($story);
-
+		$comments = $commentsRepo->findBy(
+			array("story" => $story)
+		);
 
 		$params = array(
 			"story" => $story,
