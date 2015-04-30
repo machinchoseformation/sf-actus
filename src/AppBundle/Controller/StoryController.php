@@ -26,6 +26,7 @@ class StoryController extends Controller
 	*/ 
 	public function storyDetailsAction(Request $request, $slug )
 	{
+
 		$storyRepo = $this->get("doctrine")->getRepository("AppBundle:Story");
 		$story = $storyRepo->findOneBySlug( $slug );
 
