@@ -26,14 +26,17 @@
 
 				$user->setRoles( array("ROLE_ADMIN") );
 
-				//use Symfony\Component\Security\Core\Util\SecureRandom;
 				$generator = new SecureRandom();
 				$salt = bin2hex( $generator->nextBytes(50) );
 				$token = bin2hex( $generator->nextBytes(50) );
 
 				$user->setSalt($salt);
 				$user->setToken($token);
-				
+
+				$user->setDateRegistered( new \DateTime() );
+				$user->setDateModified( new \DateTime() );
+				$user->setDateLastLogin( new \DateTime() );
+
 				dump($user);
 			}
 
