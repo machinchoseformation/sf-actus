@@ -8,6 +8,7 @@
 		<article>
 			<h3><a href="{{ path("story_details", {"slug":story.slug}) }}">{{ story.title }}</a></h3>
 			<p>{{ story.dateCreated|date("d-m-Y H:i:s") }}</p>
+			{{ story.author.username }}
 		</article>
 	{% endfor %}
 

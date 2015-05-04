@@ -21,11 +21,15 @@
 		{
 			$this->em = $em;
 
-			$this->faker = \Faker\Factory::create();
+			$this->faker = \Faker\Factory::create("fr_FR");
 
 			//en boucle, créer quelques User
 			//users de base
 			$users = array("yo", "pouf", "admin", "test");
+
+			for($u=0;$u<10;$u++){
+				$users[] = $this->faker->username;
+			}
 
 			foreach($users as $username){
 
@@ -68,7 +72,7 @@
 		private function createStory($user)
 		{
 			$story = new Story();
-			$story->setTitle( $this->faker->sentence );
+			$story->setTitle( $this->faker->catchPhrase );
 			$story->setContent( $this->faker->text );
 
 			$slug = $this->get("cocur_slugify")->slugify( $story->getTitle() );

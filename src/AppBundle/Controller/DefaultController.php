@@ -17,15 +17,7 @@ class DefaultController extends Controller
 		$storyRepo = $this->get("doctrine")->getRepository("AppBundle:Story");
 
 		//récupère toutes les stories de la bdd
-		$stories = $storyRepo->findBy(
-			array(
-				"isPublished" => 0
-			),
-			array(
-				"dateCreated" => "DESC"
-			), 
-			20, 0
-		);
+		$stories = $storyRepo->findPaginated();
 
 		//on va passer ces données à twig...
 		$params = array(

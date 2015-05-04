@@ -12,4 +12,36 @@ use Doctrine\ORM\EntityRepository;
  */
 class StoryRepository extends EntityRepository
 {
+
+	public function findPaginated()
+	{
+		// DQL
+		/*
+		$em = $this->getEntityManager();
+
+		$dql = "SELECT s, a
+				FROM AppBundle\Entity\Story s 
+				LEFT JOIN s.author a 
+				WHERE s.isPublished = 1";
+		$query = $em->createQuery($dql);
+		*/
+
+		//Doctrine Query Builder
+		$qb = $this->createQueryBuilder("s");
+
+		$qb->select('s')
+			->addSelect('a')
+			->leftJoin('s.author', 'a')
+			->where('s.isPublished = 1');
+
+		//commun aux deux
+		$query = $qb->getQuery();
+
+		$query->setMaxResults(100);
+		$query->setFirstResult(0);
+		$result = $query->getResult();
+
+		return $result;
+	}
+
 }
