@@ -4,7 +4,28 @@
 
 	<h2>Dernières nouvelles</h2>
 
-	{% for story in stories %}
+	{{ paginationResults.nowShowingMin }} à {{ paginationResults.nowShowingMax }} sur {{ paginationResults.total }}
+	<ul class="pagination">
+
+	{% if paginationResults.prevPage %}
+
+	<li><a href="{{ path('home', {page: paginationResults.prevPage}) }}">Préc</a></li>
+
+	{% endif %}
+
+	{% for i in paginationResults.numLinkMin..paginationResults.numLinkMax %}
+	<li><a href="{{ path('home', {'page' : i}) }}">{{i}}</a></li>
+	{% endfor %}
+
+	{% if paginationResults.nextPage %}
+
+	<li><a href="{{ path('home', {page: paginationResults.nextPage}) }}">Suiv</a></li>
+
+	{% endif %}
+
+	</ul>
+
+	{% for story in paginationResults.data %}
 		<article>
 			<h3><a href="{{ path("story_details", {"slug":story.slug}) }}">{{ story.title }}</a></h3>
 			<p>{{ story.dateCreated|date("d-m-Y H:i:s") }}</p>

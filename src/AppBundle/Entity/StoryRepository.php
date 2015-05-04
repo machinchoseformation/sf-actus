@@ -42,7 +42,30 @@ class StoryRepository extends EntityRepository
 		$query->setFirstResult( ($page-1) * $numPerPage );
 		$result = $query->getResult();
 
-		return $result;
+		$paginationResults = array();
+
+		//les actualités
+		$paginationResults["data"] = $result;
+
+		//affichage des infos sur les résultats
+		$paginationResults['nowShowingMin'] = ($page-1) * $numPerPage + 1;
+		$paginationResults['nowShowingMax'] = $paginationResults['nowShowingMin'] + count($result) - 1;
+
+		//nombre total possible
+		$paginationResults["total"] = $qb->select("COUNT(s)")->getQuery()->getSingleScalarResult();
+
+		//liens numériques
+		$numPagesDiff = 2;
+		$lastPage = ceil($paginationResults["total"] / $numPerPage);
+		$paginationResults['numLinkMin'] = ($page - $numPagesDiff < 1) ? 1 : $page - $numPagesDiff;
+		$paginationResults['numLinkMax'] = ($page + $numPagesDiff >= $lastPage) ? $lastPage : $page + $numPagesDiff;
+
+		//page précédente ?
+		$paginationResults["prevPage"] = ($page <= 1) ? false : $page-1;
+		$paginationResults["nextPage"] = ($page >= $lastPage) ? false : $page+1;
+		
+		dump($paginationResults);
+		return $paginationResults;
 	}
 
 }

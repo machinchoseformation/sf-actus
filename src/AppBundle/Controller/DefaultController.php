@@ -20,11 +20,11 @@ class DefaultController extends Controller
 		$storyRepo = $this->get("doctrine")->getRepository("AppBundle:Story");
 
 		//récupère toutes les stories de la bdd
-		$stories = $storyRepo->findPaginated($page);
+		$paginationResults = $storyRepo->findPaginated($page);
 
 		//on va passer ces données à twig...
 		$params = array(
-			"stories" => $stories
+			"paginationResults" => $paginationResults
 		);
 		return $this->render('default/index.html.twig', $params);
 	}
