@@ -25,11 +25,16 @@
 
                         {# is_granted pour vérifier le role #}
                         {% if app.user and is_granted("ROLE_ADMIN") %}
-                            Bonjour {{ app.user.username }} !!
+                            <li><a href="{{ path('logout') }}">Déconnexion</a></li>
+                            {% else %}
+                            <li><a href="{{ path('login') }}">Connexion</a></li>
                         {% endif %}
 
 
                     </ul>
+                    {% if app.user and is_granted("ROLE_ADMIN") %}
+                    Bonjour {{ app.user.username }} !!
+                    {% endif %}
                 </nav>
 
 

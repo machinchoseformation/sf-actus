@@ -314,45 +314,4 @@ class User implements UserInterface
     }
 
     public function eraseCredentials(){}
-    
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->stories = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Add stories
-     *
-     * @param \AppBundle\Entity\Story $stories
-     * @return User
-     */
-    public function addStory(\AppBundle\Entity\Story $stories)
-    {
-        $this->stories[] = $stories;
-
-        return $this;
-    }
-
-    /**
-     * Remove stories
-     *
-     * @param \AppBundle\Entity\Story $stories
-     */
-    public function removeStory(\AppBundle\Entity\Story $stories)
-    {
-        $this->stories->removeElement($stories);
-    }
-
-    /**
-     * Get stories
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getStories()
-    {
-        return $this->stories;
-    }
 }

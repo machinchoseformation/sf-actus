@@ -6,13 +6,16 @@
 
 	<article>
 		<h3>{{ story.title }}</h3>
+		<p>Écrit par : {{ story.author.username }}</p>
 		<p>{{ story.dateCreated|date("d-m-Y H:i:s") }}</p>
 		<div>
 			{{story.content}}
 		</div>
-
-		<a class="btn btn-danger" href="{{ path("story_delete", {"id":story.id}) }}">
+		
+		{% if app.user and is_granted("ROLE_ADMIN") %}
+			<a class="btn btn-danger" href="{{ path("story_delete", {"id":story.id}) }}">
 			<span class="glyphicon glyphicon-remove"></span> Effacer cet article</a>
+		{% endif %}
 
 	</article>
 

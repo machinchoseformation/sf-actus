@@ -86,6 +86,12 @@ class Story
     private $comments;
 
 
+    /**
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", 
+    * inversedBy="stories")
+    */
+    private $author;
+
 
     /**
      * Get id
@@ -297,5 +303,28 @@ class Story
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * Set author
+     *
+     * @param \AppBundle\Entity\User $author
+     * @return Story
+     */
+    public function setAuthor(\AppBundle\Entity\User $author = null)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getAuthor()
+    {
+        return $this->author;
     }
 }

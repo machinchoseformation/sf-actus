@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use AppBundle\Entity\Story;
 use AppBundle\Form\StoryType;
@@ -68,6 +69,7 @@ class StoryController extends Controller
 
 
 	/**
+	 * @Security("has_role('ROLE_ADMIN')")
 	 * @Route("/creation", name="create_story")
 	 */
 	public function createStoryAction(
@@ -93,6 +95,10 @@ class StoryController extends Controller
 
 			$slug = $this->get("cocur_slugify")->slugify( $story->getTitle() );
 			$story->setSlug( $slug );
+
+			//crée la relation avec l'auteur de l'article
+			//(l'utilisateur connecté)
+			$story->setAuthor( $this->getUser() );
 
 			//si l'article est publié, donner une date de publication
 			if ($story->getIsPublished()){
@@ -120,6 +126,7 @@ class StoryController extends Controller
 
 
 	/**
+	* @Security("has_role('ROLE_ADMIN')")
 	* @Route("/effacer/{id}", requirements={"id":"\d+"}, name="story_delete")
 	*/ 	
 	public function deleteStoryAction( $id )

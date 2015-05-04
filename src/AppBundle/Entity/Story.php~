@@ -80,10 +80,17 @@ class Story
     private $isPublished;
 
     /**
-    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Comment", mappedBy="story")
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Comment", 
+    * mappedBy="story")
     */
     private $comments;
 
+
+    /**
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", 
+    * inversedBy="stories")
+    */
+    private $author;
 
 
     /**
@@ -255,5 +262,69 @@ class Story
     public function getSlug()
     {
         return $this->slug;
+    }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add comments
+     *
+     * @param \AppBundle\Entity\Comment $comments
+     * @return Story
+     */
+    public function addComment(\AppBundle\Entity\Comment $comments)
+    {
+        $this->comments[] = $comments;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \AppBundle\Entity\Comment $comments
+     */
+    public function removeComment(\AppBundle\Entity\Comment $comments)
+    {
+        $this->comments->removeElement($comments);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * Set author
+     *
+     * @param \AppBundle\Entity\User $author
+     * @return Story
+     */
+    public function setAuthor(\AppBundle\Entity\User $author = null)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getAuthor()
+    {
+        return $this->author;
     }
 }

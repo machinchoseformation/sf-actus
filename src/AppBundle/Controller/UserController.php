@@ -59,7 +59,7 @@
 
 
 		/**
-		 * @Route("/login", name="login_route")
+		 * @Route("/login", name="login")
 		 */
 		public function loginAction(Request $request)
 		{
