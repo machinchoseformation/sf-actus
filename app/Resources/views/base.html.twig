@@ -24,7 +24,7 @@
                         <li><a href="{{ path('about') }}" title="À propos de nous">À propos</a></li>
 
                         {# is_granted pour vérifier le role #}
-                        {% if is_granted("ROLE_ADMIN") %}
+                        {% if app.user and is_granted("ROLE_ADMIN") %}
                             Bonjour {{ app.user.username }} !!
                         {% endif %}
 
