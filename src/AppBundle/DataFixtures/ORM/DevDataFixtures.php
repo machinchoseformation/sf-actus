@@ -7,7 +7,6 @@
 	use Symfony\Component\DependencyInjection\ContainerAware;
 	use Symfony\Component\Security\Core\Util\SecureRandom;
 
-
 	use AppBundle\Entity\User;
 	use AppBundle\Entity\Story;
 	use AppBundle\Entity\Comment;
@@ -15,10 +14,14 @@
 	class DevDataFixtures extends ContainerAware implements FixtureInterface
 	{
 
+		private $em;
+		private $faker;
+
 		public function load(ObjectManager $em)
 		{
+			$this->em = $em;
 
-			$faker = \Faker\Factory::create();
+			$this->faker = \Faker\Factory::create();
 
 			//en boucle, créer quelques User
 			//users de base
@@ -26,80 +29,99 @@
 
 			foreach($users as $username){
 
-				$user = new User();
+				$user = $this->createUser($username);
 
-				$user->setUsername($username);
-				$user->setEmail( $faker->email );
-				$user->setRoles( array("ROLE_ADMIN") );
-
-				$generator = new SecureRandom();
-				$salt = bin2hex( $generator->nextBytes(50) );
-				$token = bin2hex( $generator->nextBytes(50) );
-
-				$user->setSalt($salt);
-				$user->setToken($token);
-
-				$user->setDateRegistered( $faker->dateTimeBetween("-3 years") );
-				$user->setDateModified( $user->getDateRegistered() );
-				$user->setDateLastLogin( $user->getDateRegistered() );
-
-				$encoder = $this->get("security.password_encoder");
-				$encodedPassword = $encoder->encodePassword(
-					$user, $username
-				);
-
-				$user->setPassword($encodedPassword);
-
-				$em->persist($user);
-
-				//pour chaque user, créer plusieurs Story
-					//pour chaque Story, créer quelques Comment
-				
-				$storyNumber = $faker->numberBetween(0,30);
+				//pour chaque user, créer plusieurs Story				
+				$storyNumber = $this->faker->numberBetween(0,30);
 				for($i=0;$i<$storyNumber;$i++){
-					$story = new Story();
-					$story->setTitle( $faker->sentence );
-					$story->setContent( $faker->text );
+					
+					$story = $this->createStory($user);
 
-					$slug = $this->get("cocur_slugify")->slugify( $story->getTitle() );
-					$story->setSlug( $slug );
-
-					//crée la relation avec l'auteur de l'article
-					//(l'utilisateur connecté)
-					$story->setAuthor( $user );
-
-					$story->setIsPublished( $faker->boolean($chanceOfGettingTrue = 90) );
-
-					$story->setDateCreated( $faker->dateTimeBetween($user->getDateRegistered()) );
-					$story->setDateModified( $story->getDateCreated() );
-
-					//si l'article est publié, donner une date de publication
-					if ($story->getIsPublished()){
-						$story->setDatePublished( $faker->dateTimeBetween($story->getDateCreated()) );
-						$story->setDateModified( $story->getDatePublished() );
-					}
-
-					$em->persist($story);
-
-					$commentsNumber = $faker->numberBetween(0,12);
-
+					//pour chaque Story, créer quelques Comment
+					$commentsNumber = $this->faker->numberBetween(0,12);
 					for($j=0;$j<$commentsNumber;$j++){
-
-						$comment = new Comment();
-						$comment->setStory($story);
-						$comment->setPseudo($faker->username);
-						$comment->setEmail($comment->getPseudo() . "@" . $faker->domainName);
-						$comment->setContent($faker->paragraph);
-						$comment->setDateCreated( $faker->dateTimeBetween($story->getDateCreated()) );
-						$comment->setDateModified($comment->getDateCreated());
-
-						$em->persist($comment);
+						$this->createComment($story);
 					}
 				}
 			}
 
-			$em->flush();
+			$this->em->flush();
 
+		}
+
+
+		private function createComment($story)
+		{
+			$comment = new Comment();
+			$comment->setStory($story);
+			$comment->setPseudo($this->faker->username);
+			$comment->setEmail($comment->getPseudo() . "@" . $this->faker->domainName);
+			$comment->setContent($this->faker->paragraph);
+			$comment->setDateCreated( $this->faker->dateTimeBetween($story->getDateCreated()) );
+			$comment->setDateModified($comment->getDateCreated());
+
+			$this->em->persist($comment);
+			return $comment;
+		}
+
+
+		private function createStory($user)
+		{
+			$story = new Story();
+			$story->setTitle( $this->faker->sentence );
+			$story->setContent( $this->faker->text );
+
+			$slug = $this->get("cocur_slugify")->slugify( $story->getTitle() );
+			$story->setSlug( $slug );
+
+			//crée la relation avec l'auteur de l'article
+			//(l'utilisateur connecté)
+			$story->setAuthor( $user );
+
+			$story->setIsPublished( $this->faker->boolean($chanceOfGettingTrue = 90) );
+
+			$story->setDateCreated( $this->faker->dateTimeBetween($user->getDateRegistered()) );
+			$story->setDateModified( $story->getDateCreated() );
+
+			//si l'article est publié, donner une date de publication
+			if ($story->getIsPublished()){
+				$story->setDatePublished( $this->faker->dateTimeBetween($story->getDateCreated()) );
+				$story->setDateModified( $story->getDatePublished() );
+			}
+
+			$this->em->persist($story);
+			return $story;
+		}
+
+
+		private function createUser($username)
+		{
+			$user = new User();
+
+			$user->setUsername($username);
+			$user->setEmail( $this->faker->email );
+			$user->setRoles( array("ROLE_ADMIN") );
+
+			$generator = new SecureRandom();
+			$salt = bin2hex( $generator->nextBytes(50) );
+			$token = bin2hex( $generator->nextBytes(50) );
+
+			$user->setSalt($salt);
+			$user->setToken($token);
+
+			$user->setDateRegistered( $this->faker->dateTimeBetween("-3 years") );
+			$user->setDateModified( $user->getDateRegistered() );
+			$user->setDateLastLogin( $user->getDateRegistered() );
+
+			$encoder = $this->get("security.password_encoder");
+			$encodedPassword = $encoder->encodePassword(
+				$user, $username
+			);
+
+			$user->setPassword($encodedPassword);
+
+			$this->em->persist($user);
+			return $user;
 		}
 
 
