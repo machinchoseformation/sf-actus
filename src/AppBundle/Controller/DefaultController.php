@@ -9,15 +9,18 @@ class DefaultController extends Controller
 {
 
 	/**
-	 * @Route("/", name="home")
+	 * @Route("/{page}", 
+	 * requirements={"page":"\d+"}, 
+	 * defaults={"page":1},
+	 * name="home")
 	 */
-	public function homeAction()
+	public function homeAction($page)
 	{
 		//on récupére le repository de Story
 		$storyRepo = $this->get("doctrine")->getRepository("AppBundle:Story");
 
 		//récupère toutes les stories de la bdd
-		$stories = $storyRepo->findPaginated();
+		$stories = $storyRepo->findPaginated($page);
 
 		//on va passer ces données à twig...
 		$params = array(

@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityRepository;
 class StoryRepository extends EntityRepository
 {
 
-	public function findPaginated()
+	public function findPaginated($page)
 	{
 		// DQL
 		/*
@@ -37,8 +37,9 @@ class StoryRepository extends EntityRepository
 		//commun aux deux
 		$query = $qb->getQuery();
 
-		$query->setMaxResults(100);
-		$query->setFirstResult(0);
+		$numPerPage = 10;
+		$query->setMaxResults($numPerPage);
+		$query->setFirstResult( ($page-1) * $numPerPage );
 		$result = $query->getResult();
 
 		return $result;
