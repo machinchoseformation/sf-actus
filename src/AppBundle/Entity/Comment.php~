@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Comment
  *
  * @ORM\Table()
+ * @ORM\HasLifeCycleCallbacks()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\CommentRepository")
  */
 class Comment
@@ -58,9 +59,29 @@ class Comment
 
     /**
     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Story", inversedBy="comments")
-    * @ORM\JoinColumn(nullable=false)
+    * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
     */
     private $story;
+
+
+    /**
+    * @ORM\PrePersist()
+    */
+    public function preInsert()
+    {
+        $this->setDateCreated( new \DateTime() );
+        $this->setDateModified( new \DateTime() );
+    }
+
+
+    /**
+    * @ORM\PreUpdate()
+    */
+    public function preUpdate()
+    {
+        $this->setDateModified( new \DateTime() );
+    }
+
 
 
     /**

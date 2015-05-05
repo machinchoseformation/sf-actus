@@ -16,6 +16,10 @@ class DefaultController extends Controller
 	 */
 	public function homeAction($page)
 	{
+
+		$monService = $this->get("test_service");
+		$monService->yo();
+
 		//on récupére le repository de Story
 		$storyRepo = $this->get("doctrine")->getRepository("AppBundle:Story");
 
