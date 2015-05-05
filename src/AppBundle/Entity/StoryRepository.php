@@ -44,6 +44,14 @@ class StoryRepository extends EntityRepository
 
 		$paginationResults = array();
 
+		//nombre total possible
+		$paginationResults["total"] = $qb->select("COUNT(s)")->getQuery()->getSingleScalarResult();
+		$lastPage = ceil($paginationResults["total"] / $numPerPage);
+
+		if ($page > $lastPage){
+			return false;
+		}
+
 		//les actualités
 		$paginationResults["data"] = $result;
 
@@ -51,12 +59,8 @@ class StoryRepository extends EntityRepository
 		$paginationResults['nowShowingMin'] = ($page-1) * $numPerPage + 1;
 		$paginationResults['nowShowingMax'] = $paginationResults['nowShowingMin'] + count($result) - 1;
 
-		//nombre total possible
-		$paginationResults["total"] = $qb->select("COUNT(s)")->getQuery()->getSingleScalarResult();
-
 		//liens numériques
 		$numPagesDiff = 2;
-		$lastPage = ceil($paginationResults["total"] / $numPerPage);
 		$paginationResults['numLinkMin'] = ($page - $numPagesDiff < 1) ? 1 : $page - $numPagesDiff;
 		$paginationResults['numLinkMax'] = ($page + $numPagesDiff >= $lastPage) ? $lastPage : $page + $numPagesDiff;
 
@@ -64,7 +68,7 @@ class StoryRepository extends EntityRepository
 		$paginationResults["prevPage"] = ($page <= 1) ? false : $page-1;
 		$paginationResults["nextPage"] = ($page >= $lastPage) ? false : $page+1;
 		
-		dump($paginationResults);
+		//dump($paginationResults);
 		return $paginationResults;
 	}
 

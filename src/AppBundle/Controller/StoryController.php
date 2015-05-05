@@ -41,9 +41,7 @@ class StoryController extends Controller
 
 		$commentForm->handleRequest($request);
 		if ($commentForm->isValid()){
-			$comment->setDateCreated(new \DateTime());
-			$comment->setDateModified(new \DateTime());
-
+		
 			$comment->setStory($story);
 
 			$em = $this->get("doctrine")->getManager();

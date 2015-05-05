@@ -10,7 +10,7 @@ class DefaultController extends Controller
 
 	/**
 	 * @Route("/{page}", 
-	 * requirements={"page":"\d+"}, 
+	 * requirements={"page":"[1-9]\d*"}, 
 	 * defaults={"page":1},
 	 * name="home")
 	 */
@@ -21,6 +21,10 @@ class DefaultController extends Controller
 
 		//récupère toutes les stories de la bdd
 		$paginationResults = $storyRepo->findPaginated($page);
+
+		if (!$paginationResults){
+			throw $this->createNotFoundException();
+		}
 
 		//on va passer ces données à twig...
 		$params = array(
