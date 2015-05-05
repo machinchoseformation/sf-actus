@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Image
@@ -58,6 +59,10 @@ class Image
 
     /**
     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
+    * @Assert\File(
+    *     maxSize = "500k",
+    *     maxSizeMessage = "The file is too large ({{ size }} {{ suffix }}). Allowed maximum size is {{ limit }} {{ suffix }}."
+    * )
     */
     private $tmpFile;
 
