@@ -3,6 +3,6 @@
 {% block body %}
 	<h1>Station de téléversement</h1>
 
-	{{ form(uploadForm) }}
+	{{ form(uploadForm, {"attr": {"novalidate":"novalidate"}}) }}
 	
 {% endblock %}

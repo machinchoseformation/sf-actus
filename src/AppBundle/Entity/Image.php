@@ -4,10 +4,12 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Image
  *
+ * @UniqueEntity("filename")
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ImageRepository")
  */
@@ -25,7 +27,7 @@ class Image
     /**
      * @var string
      *
-     * @ORM\Column(name="filename", type="string", length=255)
+     * @ORM\Column(name="filename", type="string", length=255, unique=true)
      */
     private $filename;
 
@@ -59,12 +61,20 @@ class Image
 
     /**
     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
-    * @Assert\File(
-    *     maxSize = "500k",
-    *     maxSizeMessage = "The file is too large ({{ size }} {{ suffix }}). Allowed maximum size is {{ limit }} {{ suffix }}."
+    * 
+    * @Assert\NotBlank(message="Veuillez choisir une image à téléverser !")
+    * @Assert\Image(
+    *     maxSize = "5000k",
+    *     maxSizeMessage = "The file is too large ({{ size }} {{ suffix }}). 
+    *          Allowed maximum size is {{ limit }} {{ suffix }}."
     * )
     */
     private $tmpFile;
+
+    /**
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Story")
+    */
+    private $story;
 
 
     /**
@@ -213,5 +223,28 @@ class Image
     public function getTmpFile()
     {
         return $this->tmpFile;
+    }
+
+    /**
+     * Set story
+     *
+     * @param \AppBundle\Entity\Story $story
+     * @return Image
+     */
+    public function setStory(\AppBundle\Entity\Story $story = null)
+    {
+        $this->story = $story;
+
+        return $this;
+    }
+
+    /**
+     * Get story
+     *
+     * @return \AppBundle\Entity\Story 
+     */
+    public function getStory()
+    {
+        return $this->story;
     }
 }

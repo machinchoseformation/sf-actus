@@ -327,4 +327,11 @@ class Story
     {
         return $this->author;
     }
+
+    //Utilisé par le champs "entity" du form d'upload
+    public function __toString()
+    {
+        return $this->id . " " . $this->title;
+    }
+
 }

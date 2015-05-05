@@ -16,6 +16,17 @@ class ImageType extends AbstractType
     {
         $builder
             ->add('tmpFile', 'file')
+            ->add('story', 'entity', array(
+                    "class" => "AppBundle\Entity\Story",
+                    'query_builder' => function ($er) {
+                        return $er->createQueryBuilder('s')
+                            ->andWhere('s.isPublished = 1')
+                            ->orderBy('s.title', 'ASC');
+                    },
+                ))
+            ->add('showPubOnly', 'checkbox', array(
+                    "mapped" => false,
+                ))
             ->add('Charger', 'submit')
         ;
     }
