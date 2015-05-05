@@ -56,7 +56,9 @@ class Image
      */
     private $dateModified;
 
-
+    /**
+    * @var \Symfony\Component\HttpFoundation\File\UploadedFile
+    */
     private $tmpFile;
 
 
@@ -188,7 +190,7 @@ class Image
     /**
      * Set tmpFile
      *
-     * @param string $tmpFile
+     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $tmpFile
      * @return Image
      */
     public function setTmpFile($tmpFile)

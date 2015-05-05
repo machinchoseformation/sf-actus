@@ -4,9 +4,9 @@ parameters:
 #    parameter_name: value
 
 services:
-    ecole_multimedia.app_bundle.test_service:
-        class: AppBundle\Service\TestService
-        arguments: ["bla", "%num_per_page%", "@doctrine"]
+    image_uploader:
+        class: AppBundle\Uploader\ImageUploader
+        arguments: ["%kernel.root_dir%"]
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
