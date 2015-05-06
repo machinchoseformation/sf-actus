@@ -30,24 +30,27 @@
 	    	$adRepo = $doctrine->getRepository("AppBundle:Ad");
 
 	    	$lbc = file_get_contents("http://www.leboncoin.fr/annonces/offres/ile_de_france/?f=a&th=1&q=macbook+pro");
-
 	    	$crawler = new Crawler($lbc);
 
+	    	//boucle sur tous les liens d'annonce
 	    	$crawler->filter('.list-lbc > a')
 	    		->each(function (Crawler $node, $i) use ($adRepo, $em, $output, &$ads) {
-	    			$ad = new Ad();
-		    		$ad->setTitle( $node->attr("title") );
+	    			$ad = new Ad();	//crée une Ad pour chaque annonce
+		    		$ad->setTitle( $node->attr("title") ); //récupère l'attribut title du <a>
 		    		$ad->setLink( $node->attr("href") );
 
+		    		//extrait l'id du bon coin depuis l'url de la page de détails
 		    		if (preg_match("#/(\d+).htm#", $ad->getLink(), $matches)){
 		    			$ad->setLbcId( $matches[1] );
 		    		}
 
+		    		//déjà présent dans notre bdd ??
 		    		$found = $adRepo->findOneByLbcId($ad->getLbcId());
 		    		if ($found){
-		    			return;
+		    			return; 	//si oui, abandonne
 		    		}
 
+		    		//extrait et purifie le prix
 		    		$priceCrawler = $node->filter(".price");
 		    		$price = null;
 		    		if ($priceCrawler->count() > 0){
@@ -56,14 +59,14 @@
 		    		$ad->setPrice( $price );
 
 		    		$ad->setDateCreated(new \DateTime() );
-				   // $output->writeln( $adTitle );
+				   
 				    $em->persist($ad);
+	    			$em->flush();
 
 				    $output->writeln("Saving " . $ad->getTitle());
 				}
 			);
 
-	    	$em->flush();
 
 	        $output->writeln("Done.");
 	    }
