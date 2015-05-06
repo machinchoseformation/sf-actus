@@ -6,8 +6,7 @@
 
 	<article>
 		<h3>{{ story.title }}</h3>
-		<p>Écrit par : {{ story.author.username }}</p>
-		<p>{{ story.dateCreated|date("d-m-Y H:i:s") }}</p>
+		<p>Écrit par {{ story.author.username }} le {{ story.dateCreated|date("d-m-Y H:i:s") }}</p>
 		<div>
 			{{story.content}}
 		</div>
@@ -19,11 +18,15 @@
 
 	</article>
 
+	<h4>Parlez-en !</h4>
 	{{ form(commentForm) }}
 
 	<div class="comments">
 		{% for comment in story.comments %}
+		<div class="comment">
+		<p class="date">Le {{ comment.dateCreated|date("d-m-Y H:i:s") }} par {{ comment.pseudo }}</p>
 			<p>{{ comment.content }}</p>
+		</div>
 		{% endfor %}
 	</div>
 {% endblock %}

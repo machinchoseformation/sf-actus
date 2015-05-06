@@ -57,13 +57,13 @@
         </div>
 
         {% block javascripts %}
-        
-        {# chargé en cdn donc url en dur #}
-
-
-        {# lien vers le js local avec la fonction asset() #}
-        <script src="{{ asset('js/app.js') }}"></script>
-        
+            {% javascripts 
+            'js/test_assetic.js' 
+            'js/*' 
+            output='compiled/js/all.js' 
+            %}
+                <script src="{{ asset_url }}"></script>
+            {% endjavascripts %}
         {% endblock %}
     </body>
 </html>
