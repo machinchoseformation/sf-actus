@@ -47,18 +47,28 @@ class StoryController extends Controller
 			$em = $this->get("doctrine")->getManager();
 			$em->persist($comment);
 			$em->flush();
-		}
 
-		//récupère les commentaires associés à l'article actuel
-		//$commentsRepo = $this->get("doctrine")->getRepository("AppBundle:Comment");
-		//$comments = $commentsRepo->findByStory($story);
-		//$comments = $commentsRepo->findBy(
-		//	array("story" => $story)
-		//);
+			$this->addFlash("notice", "Commentaire enregistré !");
+
+			//envoie un email à l'auteur de l'article
+			$mailer = $this->get('mailer');
+		    $message = $mailer->createMessage()
+		        ->setSubject('Nouveau commentaire sur '.$story->getTitle().' !')
+		        ->setFrom('info@sf-actus.com')
+		        ->setTo($story->getAuthor()->getEmail())
+		        ->setBody(
+		            $this->renderView("email/comment_author_notification.html.twig", 
+		            	array("story" => $story, "newComment" => $comment)
+		            ),
+		            'text/html'
+		        );
+		        $mailer->send($message);
+
+		        return $this->redirectToRoute("story_details", array("slug" => $story->getSlug()));
+		}
 
 		$params = array(
 			"story" => $story,
-	//		"comments" => $comments,
 			"commentForm" => $commentForm->createView()
 		);
 		return $this->render("story/story_details.html.twig", $params);

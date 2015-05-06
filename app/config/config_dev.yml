@@ -9,7 +9,7 @@ framework:
 
 web_profiler:
     toolbar: true
-    intercept_redirects: false
+    intercept_redirects: true
 
 monolog:
     handlers:
@@ -44,5 +44,14 @@ monolog:
 assetic:
     use_controller: true
 
+swiftmailer:
+    transport: gmail
+    host:      ~
+    username:  machinchoseformation
+    password:  1234567violette
+    delivery_address: machinchoseformation@gmail.com
+    spool:     { type: memory }
+
 #swiftmailer:
 #    delivery_address: me@example.com
+#    disable_delivery: true

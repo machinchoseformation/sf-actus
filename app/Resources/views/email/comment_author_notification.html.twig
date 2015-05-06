@@ -1,0 +1,10 @@
+{% extends 'email.html.twig' %}
+
+{% block main_content %}
+	<h4>Nouveau commentaire :</h4>
+	{{newComment.content}}
+	<h4>Écrit par :</h4>
+	<a href="mailto:{{ newComment.email }}">{{ newComment.pseudo }}</a>
+	<h4>Sur...</h4>
+	<a href="{{ url('story_details', {"slug":story.slug}) }}">{{story.title}}</a>
+{% endblock %}
