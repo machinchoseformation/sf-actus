@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use AppBundle\Entity\Story;
@@ -165,5 +166,21 @@ class StoryController extends Controller
 		return $this->redirectToRoute("home");
 	}
 
+
+	/**
+	* @Route("test-ajax/{storyId}", name="test_ajax")
+	*/
+	public function testAjaxAction(Request $request, $storyId)
+	{
+		$storyRepo = $this->get("doctrine")->getRepository("AppBundle:Story");
+		$story = $storyRepo->find($storyId);
+		//plein de merveille en bdd avec cette story
+
+		if ($request->isXmlHttpRequest()){
+			return new JsonResponse(array("yo" => "bla"));
+		}
+
+		return $this->render("story/test_ajax.html.twig");
+	}
 
 }
